@@ -1,47 +1,74 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import './App.css';
-import { fetchData } from './Api';
-const resource = fetchData();
+const Person = props => {
+  const { job, name, img } = props.person;
+  const { children } = props;
+  const url = `https://randomuser.me/api/portraits/thumb/men/${img}.jpg`;
+  return (
+    <div className="person">
+      <img src={url} alt="" />
+      <div>
+        <h4>{name}</h4>
+        <h4>{job}</h4>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const PersonList = () => {
+  const people = [
+    {
+      img: 22,
+      name: 'ayodele tunde',
+      job: ' software developer'
+    },
+    {
+      img: 40,
+      name: 'ayodele seyi',
+      job: ' front-end developer'
+    },
+    {
+      img: 70,
+      name: 'ayodele olumide',
+      job: ' back-end developer'
+    }
+  ];
+  return (
+    <section>
+      <Person person={people[0]} />
+      <Person person={people[1]}>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error
+        consequatur, harum iste temporibus veritatis illum, ducimus velit illo
+        officia vero accusamus nisi placeat dignissimos dolores, corrupti amet
+        molestias inventore ipsam?
+      </Person>
+      <Person person={people[2]} />
+    </section>
+  );
+};
 
 const App = () => {
   return (
     <div>
-      <Suspense fallback={<h1>users loading...</h1>}>
-        <ProfileDetails />
-      </Suspense>
-      <Suspense fallback={<h1>post loading....</h1>}>
-        <ProfilePosts />
-      </Suspense>
+      <h1
+        style={{
+          textAlign: 'center',
+          backgroundColor: '#f4f4f4',
+          width: '80%',
+          margin: 'auto',
+          color: 'teal',
+          marginTop: '2rem',
+          padding: '10px',
+          boxShadow: '2px 5px 10px rgba(0,0,0,0.3)',
+          textTransform: 'capitalized',
+          transition: 'all 0.3s linear'
+        }}>
+        List Of Persons
+      </h1>
+      <PersonList />
     </div>
   );
 };
 
-const ProfileDetails = () => {
-  const user = resource.user.read();
-  return (
-    <div className="card card-body y-3">
-      <h1 className="large text-primary">{user.name}</h1>
-      <ul>
-        <li>Username:{user.username}</li>
-        <li>Email:{user.email}</li>
-        <li>city:{user.address.city}</li>
-      </ul>
-    </div>
-  );
-};
-const ProfilePosts = () => {
-  const posts = resource.posts.read();
-  return (
-    <ul className="list-group">
-      <li className="list-group-item">
-        <strong>Latest Posts</strong>
-      </li>
-      {posts.map(post => (
-        <li className="list-group-item" key={post.id}>
-          {post.title}
-        </li>
-      ))}
-    </ul>
-  );
-};
 export default App;
